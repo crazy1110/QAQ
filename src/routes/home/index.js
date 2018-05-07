@@ -1,24 +1,23 @@
-import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
-import { Form, InputNumber, Input, DatePicker, Button, Select } from 'antd';
-import moment from 'moment';
+import React, { Component } from 'react'
+import { Form, InputNumber, Input, DatePicker, Button, Select } from 'antd'
+import moment from 'moment'
 // 推荐在入口文件全局设置 locale
 import 'antd/dist/antd.css'
-import 'moment/locale/zh-cn';
-moment.locale('zh-cn');
+import 'moment/locale/zh-cn'
+moment.locale('zh-cn')
 
-const FormItem = Form.Item;
-const Option = Select.Option;
+const FormItem = Form.Item
+const Option = Select.Option
 const TextArea = Input.TextArea
 
 // 后台返回的数据格式
 const data = [
   {
-    'field': 'jobid',
-    'text': '工号',
-    'errorMessage': '请输入工号',
+    'field': 'name',
+    'text': '姓名',
+    'errorMessage': '请输入姓名',
     'required': true,
-    'type': 'int',
+    'type': 'input',
     // 'value': 100
   },{
     'field': 'date',
@@ -28,20 +27,20 @@ const data = [
     'type': 'date',
     // 'value': '2017-10-20'
   },{
-    'field': 'username',
-    'text': '用户名',
-    'errorMessage': '请输入用户名',
+    'field': 'stuid',
+    'text': '学号',
+    'errorMessage': '请输入学号',
     'required': true,
     'type': 'char',
     // 'value': 'hello world'
   },{
-    'field': 'customer',
-    'text': '客户',
-    'errorMessage': '请输入客户',
+    'field': 'department',
+    'text': '学院',
+    'errorMessage': '请输入学院',
     'required': true,
     'type': 'select',
-    'value': '中兴',
-    // 'options': ['贝尔', '中兴', '烽火']
+    'value': '计算机与通信工程学院',
+    'options': ['计算机科学与技术', '物联网工程', '电子信息工程', '通信工程', '生物医学工程']
   }
 ]
 
@@ -71,7 +70,7 @@ const tailFormItemLayout = {
 }
 
 const formLayout = {
-  width: 400,
+  width: '90%',
   marginTop: 100,
   marginLeft: 'auto',
   marginRight: 'auto'
@@ -175,4 +174,3 @@ export default class Home extends Component {
     )
   }
 }
-
