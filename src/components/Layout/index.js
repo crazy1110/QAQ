@@ -18,6 +18,9 @@ const LayoutContent = (props) => {
         <Link to='/home'> home </Link>
         <Link to='/async'> async </Link>
         <Link to='/404'> 404 </Link>
+        <Link to='/motion'> motion </Link>
+        <Link to='/test'> test </Link>
+
         <div className="user"> </div>
       </header>
       <div className='App-content'>
