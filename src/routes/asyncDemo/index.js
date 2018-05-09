@@ -1,13 +1,16 @@
 import React, { Component } from 'react'
-import { Form, Input, Icon, Button, Modal, Radio, Select , DatePicker } from 'antd'
+import { Form, Input, Icon, Button, Modal, Radio, Select, DatePicker } from 'antd'
 import 'react-redux'
 import { getUrl } from '../../actions'
 import './index.less'
 import moment from 'moment'
 import 'moment/locale/zh-cn'
 
-
 const FormItem = Form.Item
+const Option = Select.Option
+const TextArea = Input.TextArea
+const RadioButton = Radio.Button
+const RadioGroup = Radio.Group
 let uuid = 0
 
 @Form.create()
@@ -72,19 +75,8 @@ class AsyncDemo extends Component {
     this.switchItem = this.switchItem.bind(this)
   }
 
-  switchItem (item) {
-    const {form} = this.props
-    console.log(form)
-    // can use data-binding to get
-    const keys = form.getFieldValue('keys')
-    const nextKeys = keys.concat(uuid)
-    uuid++
-    // can use data-binding to set
-    // important! notify form to detect changes
-    form.setFieldsValue({
-      keys: nextKeys
-    })
-    const type = this.state.type
+  switchItem (type) {
+    this.add()
     switch (type) {
       case 'input':
         return <Input style={{width: '100%'}} />
@@ -94,28 +86,22 @@ class AsyncDemo extends Component {
         return <DatePicker style={{width: '100%'}} />
       case 'select':
         return (
-          <Select>
-            {
-              item.options.map((option, index) => {
-                return (<Option key={index} value={option}>{option}</Option>)
-              })
-            }
-          </Select>
+          <Select />
         )
       case 'radio':
         return (
-          <RadioGroup>
-            {
-              item.options.map((option, index) => {
-                return (<Radio key={index} value={option}>{option}</Radio>)
-              })
-            }
-          </RadioGroup>
+          <RadioGroup />
         )
       case 'textArea':
         return <TextArea />
       default:
         return <Input />
+    }
+  }
+  createFunc () {
+    console.log('执行')
+    return () => {
+      console.log('a')
     }
   }
 
@@ -147,6 +133,7 @@ class AsyncDemo extends Component {
           required={false}
           key={k}
         >
+          <Input style={{width: '100px'}} defaultValue='label' />
           {getFieldDecorator(`names[${k}]`, {
             validateTrigger: ['onChange', 'onBlur'],
             rules: [{
@@ -155,8 +142,7 @@ class AsyncDemo extends Component {
               message: 'Please input passenger\'s name or delete this field.'
             }]
           })(
-            {/*<Input style={{width: '70%', marginRight: 8}} />*/}
-            (this.switchItem())
+            <Input style={{width: '70%', marginRight: 8}} />
           )}
           {keys.length > 1 ? (
             <Icon
@@ -166,6 +152,7 @@ class AsyncDemo extends Component {
               onClick={() => this.remove(k)}
             />
           ) : null}
+          <Radio></Radio>
         </FormItem>
       )
     })
@@ -178,8 +165,8 @@ class AsyncDemo extends Component {
         <Form onSubmit={this.handleSubmit} className='create-form'>
           {formItems}
           <FormItem {...formItemLayoutWithOutLabel}>
-            <Button type="dashed" onClick={this.showModal} style={{width: '60%'}}>
-              <Icon type="plus" /> Add field
+            <Button type='dashed' onClick={this.showModal} style={{width: '60%'}}>
+              <Icon type='plus' /> Add field
             </Button>
             <Modal
               title='选择添加表单类型'
@@ -189,7 +176,7 @@ class AsyncDemo extends Component {
               okText="确认"
               cancelText="取消"
             >
-              <div onClick={this.switchItem} ><p>type:input</p></div>
+              <div onClick={this.switchItem.bind(this , 'input')} ><p>type:input</p></div>
               <p>type:radio</p>
               <p>type:textArea</p>
               <p>type:Select</p>
