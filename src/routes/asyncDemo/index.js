@@ -133,7 +133,7 @@ class AsyncDemo extends Component {
           required={false}
           key={k}
         >
-          <Input style={{width: '100px'}} defaultValue='label' />
+          <Input style={{width: '100px',marginRight: 8}} defaultValue='label' />
           {getFieldDecorator(`names[${k}]`, {
             validateTrigger: ['onChange', 'onBlur'],
             rules: [{
@@ -159,7 +159,7 @@ class AsyncDemo extends Component {
     return (
       <div>
         <div style={{marginBottom: 16}}>
-          <Input addonBefore="Http://somefor" defaultValue="请输入自定义URL" style={{width: '500px'}}
+          <Input addonBefore="Http://somefor" defaultValue='请输入自定义URL' style={{width: '500px'}}
                  onChange={(e) => {this.setState({url: e.target.value})}} />
         </div>
         <Form onSubmit={this.handleSubmit} className='create-form'>
@@ -177,9 +177,9 @@ class AsyncDemo extends Component {
               cancelText="取消"
             >
               <div onClick={this.switchItem.bind(this , 'input')} ><p>type:input</p></div>
-              <p>type:radio</p>
-              <p>type:textArea</p>
-              <p>type:Select</p>
+              <div onClick={this.switchItem.bind(this , 'radio')}><p>type:radio</p></div>
+              <div onClick={this.switchItem.bind(this , 'textArea')}><p>type:textArea</p></div>
+              <div onClick={this.switchItem.bind(this , 'select')}><p>type:Select</p></div>
             </Modal>
           </FormItem>
           <FormItem {...formItemLayoutWithOutLabel}>
