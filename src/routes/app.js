@@ -1,6 +1,7 @@
 import React from 'react'
 import { Redirect, Route, Switch ,BrowserRouter} from 'react-router-dom'
 import Layout from '../components/Layout'
+import createForm from '../components/createForm/CreateForm'
 import NotFound from './404'
 import ListSortDemo from './motion/index'
 import Home from './home'
@@ -19,6 +20,7 @@ const App = (props) => {
       <Switch>
         <Redirect exact from='/' to='/async' />
         <Route path='/home' component={Home} />
+        <Route path='/create' component={createForm} />
         <Route path='/async' component={AsyncDemo} />
         <Route path='/404' component={NotFound} />
         <Route path='/motion' component={ListSortDemo} />
