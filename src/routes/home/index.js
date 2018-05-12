@@ -102,10 +102,6 @@ export default class Home extends Component {
     this.getForm = this.getForm.bind(this)
   }
 
-  componentWillMount () {
-    console.log(this.props)
-  }
-
   getForm () {
     fetch('url').then((res) => {
       const data = res
