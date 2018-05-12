@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Form, Input, Icon, Button, Modal, Radio, Select, DatePicker } from 'antd'
-import 'react-redux'
+import { connect} from 'react-redux'
 import { getUrl } from '../../actions'
 import './index.less'
 import moment from 'moment'
@@ -39,7 +39,8 @@ class AsyncDemo extends Component {
       keys: keys.filter(key => key !== k)
     })
   }
-  add = (type) => {
+  add = () =>{
+
     const {form} = this.props
     console.log(form)
     // can use data-binding to get
@@ -54,13 +55,14 @@ class AsyncDemo extends Component {
     this.hideModal()
   }
   handleSubmit = (e) => {
-    this.props.dispatch(getUrl(this.state.url))
     e.preventDefault()
     this.props.form.validateFields((err, values) => {
       if (!err) {
         console.log('Received values of form: ', values)
       }
     })
+    this.props.dispatch(getUrl(this.state.url))
+    console.log('123', this.props.url)
   }
 
   constructor (props) {
@@ -76,6 +78,7 @@ class AsyncDemo extends Component {
   }
 
   switchItem (type) {
+    this.setState({type: type})
     this.add()
     switch (type) {
       case 'input':
@@ -98,6 +101,7 @@ class AsyncDemo extends Component {
         return <Input />
     }
   }
+
   createFunc () {
     console.log('执行')
     return () => {
@@ -106,6 +110,7 @@ class AsyncDemo extends Component {
   }
 
   render () {
+    const { url } = this.props
     const {getFieldDecorator, getFieldValue} = this.props.form
     const formItemLayout = {
       labelCol: {
@@ -126,14 +131,16 @@ class AsyncDemo extends Component {
     getFieldDecorator('keys', {initialValue: []})
     const keys = getFieldValue('keys')
     const formItems = keys.map((k, index) => {
+      console.log(url)
       return (
+        // this.state.type.map((type, index) => {
         <FormItem
           {...formItemLayoutWithOutLabel}
           // label={index === 0 ? '123456' : ''}
           required={false}
           key={k}
         >
-          <Input style={{width: '100px',marginRight: 8}} defaultValue='label' />
+          <Input style={{width: '100px', marginRight: 8}} defaultValue='label' />
           {getFieldDecorator(`names[${k}]`, {
             validateTrigger: ['onChange', 'onBlur'],
             rules: [{
@@ -142,7 +149,7 @@ class AsyncDemo extends Component {
               message: 'Please input passenger\'s name or delete this field.'
             }]
           })(
-            <Input style={{width: '70%', marginRight: 8}} />
+            this.switchItem.bind('this', this.state.type)
           )}
           {keys.length > 1 ? (
             <Icon
@@ -154,6 +161,7 @@ class AsyncDemo extends Component {
           ) : null}
           <Radio></Radio>
         </FormItem>
+        // })
       )
     })
     return (
@@ -176,10 +184,10 @@ class AsyncDemo extends Component {
               okText="确认"
               cancelText="取消"
             >
-              <div onClick={this.switchItem.bind(this , 'input')} ><p>type:input</p></div>
-              <div onClick={this.switchItem.bind(this , 'radio')}><p>type:radio</p></div>
-              <div onClick={this.switchItem.bind(this , 'textArea')}><p>type:textArea</p></div>
-              <div onClick={this.switchItem.bind(this , 'select')}><p>type:Select</p></div>
+              <div onClick={this.switchItem.bind(this, 'input')}><p>type:input</p></div>
+              <div onClick={this.switchItem.bind(this, 'radio')}><p>type:radio</p></div>
+              <div onClick={this.switchItem.bind(this, 'textArea')}><p>type:textArea</p></div>
+              <div onClick={this.switchItem.bind(this, 'select')}><p>type:Select</p></div>
             </Modal>
           </FormItem>
           <FormItem {...formItemLayoutWithOutLabel}>
@@ -198,5 +206,5 @@ const mapStateToProps = (state) => {
   }
 }
 
-// export default connect(mapStateToProps())(AsyncDemo)
-export default AsyncDemo
+export default connect(mapStateToProps)(AsyncDemo)
+// export default AsyncDemo
