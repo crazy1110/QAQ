@@ -176,6 +176,7 @@ class DynamicFieldSet extends React.Component {
         <div>
           <Modal title="Title"
                  visible={radioVisible}
+                 onCancel={()=>{this.setState({radioVisible:false})}}
                  // confirmLoading={confirmLoading}
           >
             <RadioModel handleSubmitRadio={this.handleSubmitRadio}/>
