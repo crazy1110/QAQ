@@ -1,8 +1,8 @@
-import {Form, Icon, Input, Button} from 'antd';
+import {Form, Icon, Input, Button,Select} from 'antd';
 import './index.css'
 const FormItem = Form.Item;
-
-let radioId = 0
+const Option = Select.Option;
+let ID = 0
 
 class RadioModel extends React.Component {
   componentDidMount() {
@@ -16,24 +16,28 @@ class RadioModel extends React.Component {
       if (!err) {
         let Values=[]
         let Title=this.props.form.getFieldValue('title')
+        let Rule=this.props.form.getFieldValue('rule')
+        let Require=this.props.form.getFieldValue('require')
+        if(this.props.formType === 'radio'){
+          for(let i=0;i<100;i++){
+            let name='key'+i
+            let radioValue=this.props.form.getFieldValue(name)
 
-        for(let i=0;i<100;i++){
-          let name='radio'+i
-          let radioValue=this.props.form.getFieldValue(name)
-
-          if(radioValue){
-            Values.push(radioValue)
+            if(radioValue){
+              Values.push(radioValue)
+            }
           }
+          this.props.handleSubmitRadio(Values,Title,Require)
+        }else if(this.props.formType === 'input'){
+          console.log(Rule)
+          this.props.handleSubmitInput(Values,Title,Rule,Require)
 
         }
-        console.log('[value]===', Values,'[title]===',Title);
-        this.props.handleSubmitRadio(Values,Title)
 
+        console.log('[value]===', Values,'[title]===',Title);
 
       }
     })
-
-
   }
 
 
@@ -41,19 +45,19 @@ class RadioModel extends React.Component {
 
       const {form} = this.props;
 
-      const keys = form.getFieldValue('radioKeys');
-      const nextKeys = keys.concat(radioId);
-      radioId++;
+      const keys = form.getFieldValue('keys');
+      const nextKeys = keys.concat(ID);
+      ID++;
 
       form.setFieldsValue({
-        radioKeys: nextKeys,
+        keys: nextKeys,
       });
     }
 
     remove=(k)=>{
       const { form } = this.props;
-      const keys=form.getFieldValue('radioKeys')
-      let options={radioKeys:keys.filter(key=>key!==k)}
+      const keys=form.getFieldValue('keys')
+      let options={keys:keys.filter(key=>key!==k)}
 
       form.setFieldsValue(options)
 
@@ -61,16 +65,19 @@ class RadioModel extends React.Component {
 
 
     render(){
-      const {getFieldDecorator, getFieldsError,  getFieldValue} = this.props.form;
+      const {getFieldDecorator,  getFieldValue} = this.props.form;
+      const formItemLayout = {
+        labelCol: { span: 6 },
+        wrapperCol: { span: 14 },
+      };
 
+      getFieldDecorator('keys', {initialValue: []});
 
-      getFieldDecorator('radioKeys', {initialValue: []});
-
-      const radioKeys = getFieldValue('radioKeys');
+      const radioKeys = getFieldValue('keys');
 
       const inputFormItems = radioKeys.map((k, index) => {
 
-        let inputType = 'radio' + k
+        let inputType = 'key' + k
         // console.log(inputType)
         return (
           <FormItem
@@ -97,7 +104,7 @@ class RadioModel extends React.Component {
         <Form layout="inline" onSubmit={this.handleSubmit}>
 
           <FormItem
-            required={false}
+            label={'标题：'}
             key={100}
           >
             {getFieldDecorator('title', {
@@ -107,7 +114,38 @@ class RadioModel extends React.Component {
             )}
           </FormItem>
 
-          {inputFormItems}
+          <FormItem
+            label={'是否必选：'}
+            key={101}
+          >
+            {getFieldDecorator('require', {
+              rules: [{required: true, message: ''}],
+            })(
+              <Select placeholder="Please select rule" style={{width:200}}>
+                <Option value={1}>是</Option>
+                <Option value={0}>否</Option>
+              </Select>
+            )}
+          </FormItem>
+
+          {this.props.formType === 'input' ? (<FormItem
+            label={'规则：'}
+          >
+            {getFieldDecorator('rule', {
+              rules: [
+                { required: true, message: 'Please select rule' },
+              ],
+            })(
+              <Select placeholder="Please select rule" style={{width:200}}>
+                <Option value="not rule">无规则</Option>
+                <Option value="only num">只能数字</Option>
+                <Option value="only Chinese">只能中文</Option>
+              </Select>
+            )}
+          </FormItem>):null }
+
+          <br/>
+          {this.props.formType ==='radio'? inputFormItems:null}
           <FormItem>
             <Button
               type="primary"
@@ -117,9 +155,11 @@ class RadioModel extends React.Component {
             </Button>
           </FormItem>
 
-          <Button type="primary" onClick={() => {
+          {this.props.formType ==='radio'? (<Button
+            type="primary" onClick={() => {
             this.addRadio()
-          }}>添加</Button>
+          }}>添加</Button>)   :null}
+
 
         </Form>
       )
