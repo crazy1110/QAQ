@@ -23,7 +23,7 @@ class DynamicFieldSet extends React.Component {
     const { form } = this.props;
     // can use data-binding to get
     const keys = form.getFieldValue('keys');
-    const nextKeys = keys.concat(uuid);
+    const nextKeys = keys.concat(id);
     id++;
     // can use data-binding to set
     // important! notify form to detect changes

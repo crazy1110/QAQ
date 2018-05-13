@@ -1,7 +1,7 @@
 import React from 'react'
 import { Redirect, Route, Switch ,BrowserRouter} from 'react-router-dom'
 import Layout from '../components/Layout'
-import createForm from '../components/CreateForm/CreateForm'
+import createForm from '../components/createForm/CreateForm'
 import NotFound from './404'
 import ListSortDemo from './motion/index'
 import Home from './home'
