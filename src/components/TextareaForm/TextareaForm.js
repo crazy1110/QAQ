@@ -95,7 +95,7 @@ class DynamicFieldSet extends React.Component {
         {formItems}
         <FormItem {...formItemLayoutWithOutLabel}>
           <Button type="dashed" onClick={this.add} style={{ width: '60%' }}>
-            <Icon type="plus" /> 添加Radio
+            <Icon type="plus" /> 添加TextArea
           </Button>
         </FormItem>
       </Form>

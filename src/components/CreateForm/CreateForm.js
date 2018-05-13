@@ -1,30 +1,10 @@
-import React, {Component} from 'react'
-import {Button} from 'antd'
+import React from 'react'
 import InputForm from '../InputForm/InputForm'
 import RadioForm from '../RadioForm/index'
 import TextAreaForm from '../TextareaForm/TextareaForm'
+import CollegeForm from '../collegeForm/collegeFrom'
 
-class CreateForm extends Component{
-
-  constructor () {
-    super()
-    this.state = {
-      input: [] ,
-      radio: [] ,
-    }
-  }
-
-  handleAddInput=(value) => {
-    this.setState({
-      input:[value]
-    })
-  }
-  handleAddRadio=(value) => {
-    this.setState({
-      radio:[value]
-    })
-  }
-
+class CreateForm extends React.Component{
   render() {
     return (
       <div>
@@ -32,6 +12,7 @@ class CreateForm extends Component{
         <InputForm handleAddInput={this.handleAddInput} />,
         <RadioForm handleAddRadio={this.handleAddRadio}/>,
         <TextAreaForm />
+        <CollegeForm />
       </div>
     )
   }
