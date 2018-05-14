@@ -6,20 +6,21 @@ import RadioForm from '../RadioForm/index'
 // import TextAreaForm from '../TextareaForm/TextareaForm'
 import CollegeForm from '../collegeForm/collegeFrom'
 
-let A_Z = "";
+let A_Z = ''
 for (let i = 65; i < 91; i++) {
-  A_Z += String.fromCharCode(i);
+  A_Z += String.fromCharCode(i)
 }
 let URL = 'http://form.sealbaby.cn/'
 
 class CreateForm extends React.Component {
-  constructor() {
+  constructor () {
     super()
     this.state = {
       url: '',
       input: {
         name: [],
         require: [],
+        values: [],
         type: '',
         rules: []
       },
@@ -27,11 +28,13 @@ class CreateForm extends React.Component {
         name: [],
         require: [],
         values: [],
-        type: ''
+        type: '',
+        rules: []
       },
       textArea: {
         name: [],
         require: [],
+        values: [],
         type: '',
         rules: []
       },
@@ -70,6 +73,7 @@ class CreateForm extends React.Component {
       OBJ[A_Z[id]] = {
         require: require[i],
         type: type,
+        value: '',
         name: name[i],
         rules: rules[i]
       }
@@ -87,13 +91,13 @@ class CreateForm extends React.Component {
         } else {
           valueStr = valueStr + ',' + singleValue[j]
         }
-
       }
       OBJ[A_Z[id]] = {
         require: require[i],
         type: type,
         values: valueStr,
-        name: name[i]
+        name: name[i],
+        rules: ''
       }
       obj.attributes = {...obj.attributes, ...OBJ}
     }
@@ -105,6 +109,7 @@ class CreateForm extends React.Component {
       OBJ[A_Z[id]] = {
         require: require[i],
         type: type,
+        values: '',
         name: name[i],
         rules: rules[i]
       }
@@ -118,10 +123,10 @@ class CreateForm extends React.Component {
     const config = {
       method: 'post',
       url: url,
-      headers: {"Content-Type": "application/json"},
+      headers: {'Content-Type': 'application/json'},
       data: obj
     }
-    console.log(config)
+    console.log('config: ', config)
     axios(config)
       .then((res) => {
         console.log(res)
@@ -131,17 +136,18 @@ class CreateForm extends React.Component {
       })
   }
 
-  render() {
+  render () {
     return (
       <div>
-        <Input addonBefore="Http://somefor" placeholder='请输入自定义URL' style={{width: '500px'}} onChange={(e) => {
+        <Button type='primary' onClick={() => { console.log(this.state) }}>测试state</Button>
+        <Input addonBefore={URL} placeholder='请输入自定义URL' style={{width: '500px'}} onChange={(e) => {
           this.setState({url: e.target.value})
-        }}/>
-        <InputForm handleAddInput={this.handleAddInput} type={'input'}/>,
-        <RadioForm handleAddRadio={this.handleAddRadio}/>,
-        <InputForm handleAddTextArea={this.handleAddTextArea} type={'textArea'}/>
-        <CollegeForm/>
-        <Button onClick={() => {
+        }} />
+        <InputForm handleAddInput={this.handleAddInput} type={'input'} />,
+        <RadioForm handleAddRadio={this.handleAddRadio} />,
+        <InputForm handleAddTextArea={this.handleAddTextArea} type={'textArea'} />
+        <CollegeForm />
+        <Button type='primary' onClick={() => {
           this.handleSubmit()
         }}>创建完成</Button>
       </div>
