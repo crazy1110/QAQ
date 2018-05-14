@@ -5,7 +5,6 @@ const FormItem = Form.Item;
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 
-
 let ID=0
 let radioValueList=[],radioTitleList=[]
 class DynamicFieldSet extends React.Component {
