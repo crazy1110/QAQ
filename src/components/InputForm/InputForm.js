@@ -1,7 +1,7 @@
 import { Form, Input, Icon, Button, Modal } from 'antd';
 import InputModel from '../RadioForm/radioModel/index'
 const FormItem = Form.Item;
-
+const {TextArea} = Input
 let ID = 0;
 
 let inputTitle=[],inputRules=[],inputRequire=[]
@@ -58,13 +58,18 @@ class DynamicFieldSet extends React.Component {
 
         let obj={}
         obj.require=require
-        obj.type='input'
+        obj.type=this.props.type
         obj.name=name
         obj.rules=rules
         // obj.name=inputTitle
         // obj.rules=inputRules
         console.log('inputObj',obj)
-        this.props.handleAddInput(obj)
+        if(this.props.type === 'input') {
+          this.props.handleAddInput(obj)
+        }else if(this.props.type === 'textArea'){
+          this.props.handleAddTextArea(obj)
+        }
+
 
         console.log('Received values of form: ', values);
       }
@@ -121,30 +126,59 @@ class DynamicFieldSet extends React.Component {
       let inputType='input'+k
       let title=inputTitle[index]
       let bool=inputRequire[index] === 1 ? true : false
-      if(k !== -1){
-        return (
-          <FormItem
-            label={title}
-            required={bool}
-            key={k}
-          >
-            {getFieldDecorator(inputType, {
-              validateTrigger: ['onChange', 'onBlur'],
-              rules: [{
-                message: "Please input passenger's name or delete this field.",
-              }],
-            })(
-              <Input placeholder="passenger name" style={{ width: '60%', marginRight: 8 }} /> ,
-            )}
+      let type=this.props.type
+      if (k !== -1){
+        if (type === 'input') {
+          return (
+            <FormItem
+              label={title}
+              required={bool}
+              key={k}
+            >
+              {getFieldDecorator(inputType, {
+                validateTrigger: ['onChange', 'onBlur'],
+                rules: [{
+                  message: "Please input passenger's name or delete this field.",
+                }],
+              })(
+                <Input placeholder="passenger name" style={{ width: '60%', marginRight: 8 }} /> ,
+              )}
 
-            <Icon
-              className="dynamic-delete-button"
-              type="minus-circle-o"
-              onClick={() => this.remove(k)}
-            />
+              <Icon
+                className="dynamic-delete-button"
+                type="minus-circle-o"
+                onClick={() => this.remove(k)}
+              />
 
-          </FormItem>
-        );
+            </FormItem>
+          );
+        }else if(type==='textArea'){
+          return(
+            <FormItem
+              label={title}
+              required={bool}
+              key={k}
+            >
+              {getFieldDecorator(inputType, {
+                validateTrigger: ['onChange', 'onBlur'],
+                rules: [{
+                  message: "Please input passenger's name or delete this field.",
+                }],
+              })(
+                <TextArea rows={4} />
+              )}
+
+              <Icon
+                className="dynamic-delete-button"
+                type="minus-circle-o"
+                onClick={() => this.remove(k)}
+              />
+
+            </FormItem>
+          )
+        }
+
+
       }
 
     });
@@ -154,7 +188,7 @@ class DynamicFieldSet extends React.Component {
           {formItems}
           <FormItem {...formItemLayoutWithOutLabel}>
             <Button type="dashed" onClick={this.add} style={{ width: '60%' }}>
-              <Icon type="plus" /> 添加input
+              <Icon type="plus" /> 添加{this.props.type}
             </Button>
           </FormItem>
           <FormItem {...formItemLayoutWithOutLabel}>
