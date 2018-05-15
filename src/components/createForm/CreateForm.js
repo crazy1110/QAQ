@@ -38,23 +38,29 @@ class CreateForm extends React.Component {
         type: '',
         rules: []
       },
-      values: {}
+      values: {},
+      inputList: [],
+      textAreaList: [],
+      radioList: []
     }
   }
 
-  handleAddInput = (values) => {
+  handleAddInput = (values,inputList) => {
     this.setState({
-      input: values
+      input: values,
+      inputList: inputList
     })
   }
-  handleAddRadio = (values) => {
+  handleAddRadio = (values,radioList) => {
     this.setState({
-      radio: values
+      radio: values,
+      radioList: radioList
     })
   }
-  handleAddTextArea = (values) => {
+  handleAddTextArea = (values,textAreaList) => {
     this.setState({
-      textArea: values
+      textArea: values,
+      textAreaList: textAreaList
     })
   }
 
@@ -143,8 +149,10 @@ class CreateForm extends React.Component {
         <Input addonBefore={URL} placeholder='请输入自定义URL' style={{width: '500px'}} onChange={(e) => {
           this.setState({url: e.target.value})
         }} />
-        <InputForm handleAddInput={this.handleAddInput} type={'input'} />,
-        <RadioForm handleAddRadio={this.handleAddRadio} />,
+        {this.state.inputList}
+        {this.state.textAreaList}
+        <InputForm handleAddInput={this.handleAddInput} type={'input'} />
+        <RadioForm handleAddRadio={this.handleAddRadio} />
         <InputForm handleAddTextArea={this.handleAddTextArea} type={'textArea'} />
         <CollegeForm />
         <Button type='primary' onClick={() => {

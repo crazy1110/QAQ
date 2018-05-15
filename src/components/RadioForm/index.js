@@ -187,9 +187,9 @@ class DynamicFieldSet extends Component {
 
         <Form onSubmit={this.handleSubmit}>
           {radioFormItems}
-          <FormItem {...formItemLayoutWithOutLabel}>
-            <Button type='dashed' onClick={this.addRadio} style={{width: '60%'}}>
-              <Icon type='plus' /> Add radio
+          <FormItem {...formItemLayoutWithOutLabel} >
+            <Button type='primary' onClick={this.addRadio} style={{width: '20%'}} className='addButton' >
+              <Icon type='plus' /> 添加单选框
             </Button>
           </FormItem>
         </Form>
