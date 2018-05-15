@@ -59,12 +59,17 @@ export default class Home extends Component {
 
   componentWillMount () {
     this.getForm()
+    console.log(this.props)
   }
 
   getForm () {
-    fetch('http://form.sealbaby.cn/form/url/test3').then((json) => {
+    let path0 = this.props.match.url
+    let path = path0.slice(6)
+    console.log(path)
+    fetch(`http://form.sealbaby.cn/form/url/${path}`).then((json) => {
       return json.json()
     }).then(res => {
+      console.log(res)
       const form = res.form.attributes
       let keys = []
       let values = []
@@ -72,7 +77,6 @@ export default class Home extends Component {
         keys.push(key)
         values.push(form[key])
       }
-      console.log(values)
      const options = values.map((item, index) => {
 
      })
@@ -95,7 +99,6 @@ export default class Home extends Component {
    * @param Component
    */
   switchItem (item) {
-    console.log(item.values || ' ')
     const type = item.type
     switch (type) {
       case 'input':

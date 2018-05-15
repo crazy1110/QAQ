@@ -20,6 +20,7 @@ const LayoutContent = (props) => {
         <Link to='/404'> 404 </Link>
         <Link to='/motion'> motion </Link>
         <Link to='/test'> test </Link>
+        <Link to='/create'> create </Link>
 
         <div className="user"> </div>
       </header>

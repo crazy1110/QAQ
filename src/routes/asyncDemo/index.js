@@ -13,6 +13,8 @@ const RadioButton = Radio.Button
 const RadioGroup = Radio.Group
 let uuid = 0
 
+const url = 'try'
+
 @Form.create()
 class AsyncDemo extends Component {
   showModal = () => {
@@ -41,7 +43,6 @@ class AsyncDemo extends Component {
   }
   add = () => {
     const {form} = this.props
-    console.log(form)
     // can use data-binding to get
     const keys = form.getFieldValue('keys')
     const nextKeys = keys.concat(uuid)
@@ -61,7 +62,6 @@ class AsyncDemo extends Component {
       }
     })
     this.props.dispatch(getUrl(this.state.url))
-    console.log('123', this.props.url)
   }
 
   constructor (props) {
@@ -77,12 +77,13 @@ class AsyncDemo extends Component {
     this.switchType = this.switchType.bind(this)
     this.Middle = this.Middle.bind(this)
   }
+
   Middle (type) {
     this.add()
     this.switchItem(type)
   }
+
   switchItem (type) {
-    console.log(type)
     switch (type) {
       case 'input':
         return 'input'
@@ -132,7 +133,7 @@ class AsyncDemo extends Component {
   }
 
   render () {
-    const { url } = this.props
+    const {url} = this.props
     const {getFieldDecorator, getFieldValue} = this.props.form
     const formItemLayout = {
       labelCol: {
@@ -170,7 +171,6 @@ class AsyncDemo extends Component {
               message: 'Please input passenger\'s name or delete this field.'
             }]
           })
-          // (<Input style={{width: '60%', marginRight: 8}} />)
           (this.switchType())
           }
           {keys.length > 1 ? (

@@ -115,14 +115,11 @@ class CreateForm extends React.Component {
       }
       obj.attributes = {...obj.attributes, ...OBJ}
     }
-
-    console.log('!!!obj!!!', obj)
     this.setState({values: obj})
-
-    let url = URL + 'form/add'
+    let urlh = URL + 'form/add'
     const config = {
       method: 'post',
-      url: url,
+      url: urlh,
       headers: {'Content-Type': 'application/json'},
       data: obj
     }
@@ -134,6 +131,8 @@ class CreateForm extends React.Component {
       .catch((err) => {
         console.log(err)
       })
+    let url = this.state.url
+    this.props.history.push(`/home/${url}`)
   }
 
   render () {

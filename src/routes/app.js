@@ -18,14 +18,14 @@ const App = (props) => {
     <BrowserRouter>
     <Layout>
       <Switch>
-        <Redirect exact from='/' to='/async' />
-        <Route path='/home' component={Home} />
+        <Redirect exact from='/' to='/create' />
+        {/*<Route path='/home' component={Home} />*/}
         <Route path='/create' component={createForm} />
         <Route path='/async' component={AsyncDemo} />
         <Route path='/404' component={NotFound} />
         <Route path='/motion' component={ListSortDemo} />
         <Route path='/test' component={TableEnterLeave} />
-        {/*<Route path='/home/:url' component={Home} />*/}
+        <Route path='/home/:id' component={Home} />
         <Redirect from='*' to='/404' />
       </Switch>
     </Layout>
