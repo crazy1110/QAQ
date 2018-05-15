@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Form, InputNumber, Input, DatePicker, Button, Select, Radio } from 'antd'
 import moment from 'moment'
+import CollegeForm from '../../components/collegeForm/collegeFrom'
 // 推荐在入口文件全局设置 locale
 import 'antd/dist/antd.css'
 import 'moment/locale/zh-cn'
@@ -129,6 +130,8 @@ export default class Home extends Component {
         )
       case 'textArea':
         return <TextArea />
+      case 'major':
+        return <CollegeForm />
       default:
         return <Input />
     }

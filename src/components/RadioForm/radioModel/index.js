@@ -1,9 +1,6 @@
 import {Form, Icon, Input, Button, Select, Modal} from 'antd'
-import { Form, Icon, Input, Button, Select } from 'antd'
 import './index.css'
 
-const FormItem = Form.Item
-const Option = Select.Option
 const FormItem = Form.Item
 const Option = Select.Option
 let ID = 0
@@ -53,11 +50,11 @@ class RadioModel extends React.Component {
 
   addRadio = () => {
 
-    const keys = form.getFieldValue('keys')
+    const keys = Form.getFieldValue('keys')
     const nextKeys = keys.concat(ID)
     ID++
 
-    form.setFieldsValue({
+    Form.setFieldsValue({
       keys: nextKeys
     })
   }
