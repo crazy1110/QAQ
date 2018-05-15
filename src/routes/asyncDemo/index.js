@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Form, Input, Icon, Button, Modal, Radio, Select, DatePicker } from 'antd'
-import { connect} from 'react-redux'
+import { connect } from 'react-redux'
 import { getUrl } from '../../actions'
 import './index.less'
 import moment from 'moment'
@@ -39,8 +39,7 @@ class AsyncDemo extends Component {
       keys: keys.filter(key => key !== k)
     })
   }
-  add = () =>{
-
+  add = () => {
     const {form} = this.props
     console.log(form)
     // can use data-binding to get
@@ -75,16 +74,39 @@ class AsyncDemo extends Component {
     this.add = this.add.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
     this.switchItem = this.switchItem.bind(this)
+    this.switchType = this.switchType.bind(this)
+    this.Middle = this.Middle.bind(this)
   }
-
-  switchItem (type) {
-    this.setState({type: type})
+  Middle (type) {
     this.add()
+    this.switchItem(type)
+  }
+  switchItem (type) {
+    console.log(type)
     switch (type) {
       case 'input':
-        return <Input style={{width: '100%'}} />
+        return 'input'
       case 'char':
-        return <Input style={{width: '100%'}} />
+        return 'char'
+      case 'date':
+        return 'date'
+      case 'select':
+        return 'select'
+      case 'radio':
+        return 'radio'
+      case 'textArea':
+      default:
+        return 'input'
+    }
+  }
+
+  switchType () {
+    const type1 = this.switchItem()
+    switch (type1) {
+      case 'input':
+        return <Input style={{width: '60%', marginRight: 8}} />
+      case 'char':
+        return <Input style={{width: '60%', marginRight: 8}} />
       case 'date':
         return <DatePicker style={{width: '100%'}} />
       case 'select':
@@ -98,7 +120,7 @@ class AsyncDemo extends Component {
       case 'textArea':
         return <TextArea />
       default:
-        return <Input />
+        return <Input style={{width: '60%', marginRight: 8}} />
     }
   }
 
@@ -131,7 +153,6 @@ class AsyncDemo extends Component {
     getFieldDecorator('keys', {initialValue: []})
     const keys = getFieldValue('keys')
     const formItems = keys.map((k, index) => {
-      console.log(url)
       return (
         // this.state.type.map((type, index) => {
         <FormItem
@@ -148,9 +169,10 @@ class AsyncDemo extends Component {
               whitespace: true,
               message: 'Please input passenger\'s name or delete this field.'
             }]
-          })(
-            this.switchItem.bind('this', this.state.type)
-          )}
+          })
+          // (<Input style={{width: '60%', marginRight: 8}} />)
+          (this.switchType())
+          }
           {keys.length > 1 ? (
             <Icon
               className='dynamic-delete-button'
@@ -184,10 +206,10 @@ class AsyncDemo extends Component {
               okText="确认"
               cancelText="取消"
             >
-              <div onClick={this.switchItem.bind(this, 'input')}><p>type:input</p></div>
-              <div onClick={this.switchItem.bind(this, 'radio')}><p>type:radio</p></div>
-              <div onClick={this.switchItem.bind(this, 'textArea')}><p>type:textArea</p></div>
-              <div onClick={this.switchItem.bind(this, 'select')}><p>type:Select</p></div>
+              <div onClick={this.Middle.bind(this, 'input')}><p>type:input</p></div>
+              <div onClick={this.Middle.bind(this, 'radio')}><p>type:radio</p></div>
+              <div onClick={this.Middle.bind(this, 'textArea')}><p>type:textArea</p></div>
+              <div onClick={this.Middle.bind(this, 'select')}><p>type:Select</p></div>
             </Modal>
           </FormItem>
           <FormItem {...formItemLayoutWithOutLabel}>

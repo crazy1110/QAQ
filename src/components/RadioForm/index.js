@@ -1,4 +1,4 @@
-import {Form, Icon, Button, Radio, Modal} from 'antd'
+import {Form, Icon, Button, Radio, Input} from 'antd'
 import {Component} from 'react'
 import RadioModel from './radioModel/index'
 import './index.css'
@@ -7,10 +7,10 @@ const FormItem = Form.Item
 // const RadioButton = Radio.Button
 const RadioGroup = Radio.Group
 
-let ID = 0, radioValueList = [], radioTitleList = [],radioRequireList=[]
+let ID = 0, radioValueList = [], radioTitleList = [], radioRequireList = []
 
 class DynamicFieldSet extends Component {
-  constructor() {
+  constructor () {
     super()
     this.state = {
       radioVisible: false,
@@ -32,6 +32,7 @@ class DynamicFieldSet extends Component {
     obj[typeKeys] = keys
     console.log('obj: ', obj)
     form.setFieldsValue(obj)
+    this.handleChange()
   }
 
   addRadio = () => {
@@ -40,32 +41,55 @@ class DynamicFieldSet extends Component {
     this.setState({
       radioVisible: true
     })
-
   }
 
-  handleSubmit = (e) => {
-    e.preventDefault()
+  handleChange=() => {
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        const keys=this.props.form.getFieldValue('radioKeys')
-        let name=[],values=[],require=[]
-        for (let i=0;i<keys.length;i++) {
-
-          if (keys[i] !== -1){
+        const keys = this.props.form.getFieldValue('radioKeys')
+        let name = [], values = [], require = []
+        for (let i = 0; i < keys.length; i++) {
+          if (keys[i] !== -1) {
             name.push(radioTitleList[i])
             values.push(radioValueList[i])
             require.push(radioRequireList[i])
           }
         }
 
-        let obj={}
-        obj.require=require
-        obj.type='radio'
-        obj.name=name
-        obj.values=values
+        let obj = {}
+        obj.require = require
+        obj.type = 'radio'
+        obj.name = name
+        obj.values = values
         // obj.name=inputTitle
         // obj.rules=inputRules
-        console.log('radioObj',obj)
+        this.props.handleAddRadio(obj)
+      }
+    })
+  }
+
+  handleSubmit = (e) => {
+    e.preventDefault()
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        const keys = this.props.form.getFieldValue('radioKeys')
+        let name = [], values = [], require = []
+        for (let i = 0; i < keys.length; i++) {
+          if (keys[i] !== -1) {
+            name.push(radioTitleList[i])
+            values.push(radioValueList[i])
+            require.push(radioRequireList[i])
+          }
+        }
+
+        let obj = {}
+        obj.require = require
+        obj.type = 'radio'
+        obj.name = name
+        obj.values = values
+        // obj.name=inputTitle
+        // obj.rules=inputRules
+        console.log('radioObj', obj)
         this.props.handleAddRadio(obj)
 
         console.log('!!obj!!:', obj)
@@ -73,18 +97,16 @@ class DynamicFieldSet extends Component {
         console.log('radioList', radioValueList)
       }
     })
-
   }
 
-  handleSubmitRadio = (values, title,require) => {
-
+  handleSubmitRadio = (values, title, require) => {
     const {form} = this.props
 
     radioValueList.push(values)
     radioTitleList.push(title)
     radioRequireList.push(require)
     this.setState({
-      radioVisible: false,
+      radioVisible: false
     })
     const keys = form.getFieldValue('radioKeys')
     const nextKeys = keys.concat(ID)
@@ -92,12 +114,12 @@ class DynamicFieldSet extends Component {
     // can use data-binding to set
     // important! notify form to detect changes
     form.setFieldsValue({
-      radioKeys: nextKeys,
+      radioKeys: nextKeys
     })
-    console.log('createForm: ', values)
+    this.handleChange()
   }
 
-  render() {
+  render () {
     const {radioVisible} = this.state
     const {getFieldDecorator, getFieldValue} = this.props.form
     const formItemLayout = {
@@ -108,7 +130,7 @@ class DynamicFieldSet extends Component {
       wrapperCol: {
         xs: {span: 24},
         sm: {span: 20}
-      },
+      }
     }
     const formItemLayoutWithOutLabel = {
       wrapperCol: {
@@ -126,7 +148,7 @@ class DynamicFieldSet extends Component {
       let len = currentRadioValues.length
       let options = []
       let title = radioTitleList[index]
-      let bool= radioRequireList[index] === 1 ? true : false
+      let bool = radioRequireList[index] === 1
       for (let i = 0; i < len; i++) {
         if (radioValueList[index][i]) {
           options.push({label: radioValueList[index][i], value: radioValueList[index][i]})
@@ -142,7 +164,7 @@ class DynamicFieldSet extends Component {
           >
             {getFieldDecorator(radioType)(
               <div>
-                <RadioGroup options={options}/>
+                <RadioGroup options={options} />
               </div>
             )}
 
@@ -154,11 +176,10 @@ class DynamicFieldSet extends Component {
                 onClick={() => this.remove(k, 'radioKeys')}
               />
             ) : null}
-            <br/>
+            <br />
           </FormItem>
         )
       }
-
     })
 
     return (
@@ -166,29 +187,14 @@ class DynamicFieldSet extends Component {
 
         <Form onSubmit={this.handleSubmit}>
           {radioFormItems}
-          <FormItem {...formItemLayoutWithOutLabel}>
-
-            <Button type='dashed' onClick={this.addRadio} style={{width: '60%'}}>
-              <Icon type='plus'/> Add radio
+          <FormItem {...formItemLayoutWithOutLabel} >
+            <Button type='primary' onClick={this.addRadio} style={{width: '20%'}} className='addButton' >
+              <Icon type='plus' /> 添加单选框
             </Button>
-
-
           </FormItem>
-          <FormItem {...formItemLayoutWithOutLabel}>
-            <Button type='primary' htmlType='submit'>确认</Button>
-          </FormItem>
-
-
         </Form>
         <div>
-          <Modal title='Title' visible={radioVisible} onCancel={() => {
-            this.setState({radioVisible: false})
-          }}
-            // confirmLoading={confirmLoading}
-          >
-            <RadioModel handleSubmitRadio={this.handleSubmitRadio} formType={'radio'}/>
-
-          </Modal>
+          <RadioModel handleSubmitRadio={this.handleSubmitRadio} formType={'radio'} hideModel={() => { this.setState({radioVisible: false}) }} visible={this.state.radioVisible} />
         </div>
       </div>
 

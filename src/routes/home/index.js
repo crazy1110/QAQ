@@ -13,52 +13,6 @@ const TextArea = Input.TextArea
 const RadioButton = Radio.Button
 const RadioGroup = Radio.Group
 // 后台返回的数据格式
-const data = [
-  {
-    'field': 'name',
-    'text': '姓名',
-    'errorMessage': '请输入姓名',
-    'required': true,
-    'type': 'input',
-    // 'value': 100
-  }, {
-    'field': 'date',
-    'text': '日期',
-    'errorMessage': '请输入日期',
-    'required': false,
-    'type': 'date',
-    // 'value': '2017-10-20'
-  }, {
-    'field': 'stuid',
-    'text': '学号',
-    'errorMessage': '请输入学号',
-    'required': true,
-    'type': 'char',
-    // 'value': 'hello world'
-  }, {
-    'field': 'department',
-    'text': '学院',
-    'errorMessage': '请输入学院',
-    'required': true,
-    'type': 'select',
-    // 'value': '计算机与通信工程学院',
-    'options': ['计算机科学与技术', '物联网工程', '电子信息工程', '通信工程', '生物医学工程']
-  }, {
-    'field': 'sex',
-    'text': '性别',
-    'errorMessage': '请选择性别',
-    'required': true,
-    'type': 'radio',
-    'options': ['nv', 'nan']
-  }, {
-    'field': 'textArea',
-    'text': '介绍',
-    'errorMessage': '请输入介绍',
-    'required': true,
-    'type': 'textArea'
-  }
-]
-
 // formItem css 样式
 const formItemLayout = {
   labelCol: {
@@ -96,15 +50,33 @@ export default class Home extends Component {
   constructor (props) {
     super(props)
     this.state = {
+      form: ' ',
       data: []
     }
     this.handleSubmit = this.handleSubmit.bind(this)
     this.getForm = this.getForm.bind(this)
   }
 
+  componentWillMount () {
+    this.getForm()
+  }
+
   getForm () {
-    fetch('url').then((res) => {
-      const data = res
+    fetch('http://form.sealbaby.cn/form/url/test3').then((json) => {
+      return json.json()
+    }).then(res => {
+      const form = res.form.attributes
+      let keys = []
+      let values = []
+      for (let key in form) {
+        keys.push(key)
+        values.push(form[key])
+      }
+      console.log(values)
+     const options = values.map((item, index) => {
+
+     })
+      this.setState({data: values})
     })
   }
 
@@ -123,68 +95,62 @@ export default class Home extends Component {
    * @param Component
    */
   switchItem (item) {
+    console.log(item.values || ' ')
     const type = item.type
     switch (type) {
       case 'input':
-        return <InputNumber style={{width: '100%'}} />
-        break
-      case 'char':
         return <Input />
-        break
+      case 'char':
+        return <InputNumber style={{width: '100%'}} />
       case 'date':
         return <DatePicker style={{width: '100%'}} />
-        break
       case 'select':
         return (
           <Select>
-            {
-              item.options.map((option, index) => {
-                return (<Option key={index} value={option}>{option}</Option>)
-              })
-            }
+            {/*{*/}
+              {/*item.options.map((option, index) => {*/}
+                {/*return (<Option key={index} value={option}>{option}</Option>)*/}
+              {/*})*/}
+            {/*}*/}
           </Select>
         )
-        break
       case 'radio':
         return (
           <RadioGroup>
             {
-              item.options.map((option, index) => {
+              (item.values || []).split(',').map((option, index) => {
                 return (<Radio key={index} value={option}>{option}</Radio>)
               })
             }
           </RadioGroup>
         )
-        break
       case 'textArea':
         return <TextArea />
-        break
       default:
         return <Input />
-        break
     }
   }
 
   render () {
     const {getFieldDecorator} = this.props.form
+    const data = this.state.data
     return (
       <Form onSubmit={this.handleSubmit} style={formLayout}>
         {
           data.map((item, index) => {
             // type 为 date 日期格式需要强制转化为 moment 格式
-            item.value = item.type == 'date' ? moment(item.value, 'YYYY-MM-DD') : item.value
+            // item.value === item.type === 'date' ? moment(item.value, 'YYYY-MM-DD') : item.value
             return (
               <FormItem
                 key={index}
                 {...formItemLayout}
-                label={item.text}
+                label={item.name}
                 hasFeedback
               >
-                {getFieldDecorator(item.field, {
+                {getFieldDecorator(item.name, {
                   initialValue: item.value,
                   rules: [{
                     required: item.required,
-                    message: item.errorMessage
                   }],
                 })(
                   this.switchItem(item)

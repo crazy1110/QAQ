@@ -1,6 +1,9 @@
+import {Form, Icon, Input, Button, Select, Modal} from 'antd'
 import { Form, Icon, Input, Button, Select } from 'antd'
 import './index.css'
 
+const FormItem = Form.Item
+const Option = Select.Option
 const FormItem = Form.Item
 const Option = Select.Option
 let ID = 0
@@ -44,18 +47,20 @@ class RadioModel extends React.Component {
     })
   }
 
+  hideModel = () => {
+    this.props.hideModel()
+  }
+
   addRadio = () => {
 
-      const {form} = this.props;
+    const keys = form.getFieldValue('keys')
+    const nextKeys = keys.concat(ID)
+    ID++
 
-      const keys = form.getFieldValue('keys');
-      const nextKeys = keys.concat(ID);
-      ID++;
-
-      form.setFieldsValue({
-        keys: nextKeys,
-      });
-    }
+    form.setFieldsValue({
+      keys: nextKeys
+    })
+  }
 
   remove = (k) => {
     const {form} = this.props
@@ -78,92 +83,88 @@ class RadioModel extends React.Component {
     const radioKeys = getFieldValue('keys')
 
     const inputFormItems = radioKeys.map((k, index) => {
-
       let inputType = 'key' + k
-      // console.log(inputType)
+        // console.log(inputType)
       return (
         <FormItem
           required={false}
           key={k}
-        >
+          >
           {getFieldDecorator(inputType, {
-            rules: [{required: true, message: ''}],
+            rules: [{required: true, message: ''}]
           })(
             <Input placeholder={inputType} />
-          )}
+            )}
           <Icon
-            className="dynamic-delete-button"
-            type="minus-circle-o"
+            className='dynamic-delete-button'
+            type='minus-circle-o'
             onClick={() => this.remove(k)}
-          />
-
+            />
 
         </FormItem>
       )
     })
 
     return (
-      <Form layout="inline" onSubmit={this.handleSubmit}>
+      <Modal
+        title='title'
+        visible={this.props.visible}
+        onCancel={this.hideModel}
+        onOk={this.handleSubmit}
+      >
+        <Form layout='inline' onSubmit={this.handleSubmit}>
 
-        <FormItem
-          label={'标题：'}
-          key={100}
-        >
-          {getFieldDecorator('title', {
-            rules: [{required: true, message: ''}],
-          })(
-            <Input placeholder={'输入标题'} />
-          )}
-        </FormItem>
-
-        <FormItem
-          label={'是否必选：'}
-          key={101}
-        >
-          {getFieldDecorator('require', {
-            rules: [{required: true, message: ''}],
-          })(
-            <Select placeholder="Please select rule" style={{width: 200}}>
-              <Option value={1}>是</Option>
-              <Option value={0}>否</Option>
-            </Select>
-          )}
-        </FormItem>
-
-        {this.props.formType === 'input' ? (<FormItem
-          label={'规则：'}
-        >
-          {getFieldDecorator('rule', {
-            rules: [
-              {required: true, message: 'Please select rule'},
-            ],
-          })(
-            <Select placeholder="Please select rule" style={{width: 200}}>
-              <Option value="not rule">无规则</Option>
-              <Option value="only num">只能数字</Option>
-              <Option value="only Chinese">只能中文</Option>
-            </Select>
-          )}
-        </FormItem>) : null}
-
-        <br />
-        {this.props.formType === 'radio' ? inputFormItems : null}
-        <FormItem>
-          <Button
-            type="primary"
-            htmlType="submit"
+          <FormItem
+            label={'标题：'}
+            key={100}
           >
-            确定
-          </Button>
-        </FormItem>
+            {getFieldDecorator('title', {
+              rules: [{required: true, message: '请输入标题'}]
+            })(
+              <Input placeholder='输入标题' />
+            )}
+          </FormItem>
+          <FormItem
+            label={'是否必选：'}
+            key={101}
+          >
+            {getFieldDecorator('require', {
+              rules: [{required: true, message: '请选择是否必选'}]
+            })(
+              <Select placeholder='Please select rule' style={{width: 200}}>
+                <Option value={1}>是</Option>
+                <Option value={0}>否</Option>
+              </Select>
+            )}
+          </FormItem>
 
-        {this.props.formType === 'radio' ? (<Button
-          type="primary" onClick={() => {
-          this.addRadio()
-        }}>添加</Button>) : null}
+          {this.props.formType === 'input' ? (<FormItem
+            label={'规则：'}
+          >
+            {getFieldDecorator('rule', {
+              rules: [
+                { required: true, message: '请输入校验规则' }
+              ]
+            })(
+              <Select placeholder='Please select rule' style={{width: 200}}>
+                <Option value='0'>无规则</Option>
+                <Option value='1'>只能数字</Option>
+                <Option value='2'>只能中文</Option>
+              </Select>
+            )}
+          </FormItem>) : null }
 
+          <br />
 
-      </Form>
+          {this.props.formType === 'radio' ? (<Button
+            type='primary' onClick={() => {
+              this.addRadio()
+            }}>添加</Button>) : null}
+          <br />
+          {this.props.formType === 'radio' ? inputFormItems : null}
+        </Form>
+      </Modal>
+
     )
   }
 }

@@ -30,6 +30,55 @@ const dataArray = [
     text: 'Computer Engineer'
   }
 ]
+
+const data = [
+  {
+    'field': 'name',
+    'name': '姓名',
+    'errorMessage': '请输入姓名',
+    'require': true,
+    'type': 'input',
+    // 'value': 100
+  }, {
+    'field': 'date',
+    'name': '日期',
+    'errorMessage': '请输入日期',
+    'require': false,
+    'type': 'date',
+    // 'value': '2017-10-20'
+  }, {
+    'field': 'stuid',
+    'name': '学号',
+    'errorMessage': '请输入学号',
+    'require': true,
+    'type': 'char',
+    // 'value': 'hello world'
+  }, {
+    'field': 'department',
+    'name': '学院',
+    'errorMessage': '请输入学院',
+    'require': true,
+    'type': 'select',
+    // 'value': '计算机与通信工程学院',
+    'options': ['计算机科学与技术', '物联网工程', '电子信息工程', '通信工程', '生物医学工程']
+  }, {
+    'field': 'sex',
+    'name': '性别',
+    'errorMessage': '请选择性别',
+    'require': true,
+    'type': 'radio',
+    'options': ['nv', 'nan']
+  }, {
+    'field': 'nameArea',
+    'name': '介绍',
+    'errorMessage': '请输入介绍',
+    'require': true,
+    'type': 'textArea'
+  }
+]
+
+
+
 export default class ListSortDemo extends Component {
   constructor (props) {
     super(props)

@@ -1,26 +1,28 @@
-import { Form, Input, Icon, Button, Modal } from 'antd';
+import { Form, Input, Icon, Button } from 'antd'
 import InputModel from '../RadioForm/radioModel/index'
-const FormItem = Form.Item;
+const FormItem = Form.Item
+const {TextArea} = Input
+let ID = 0
 
-let ID = 0;
-
-let inputTitle=[],inputRules=[],inputRequire=[]
+// let inputTitle = [], inputRules = [], inputRequire = []
 
 class DynamicFieldSet extends React.Component {
-
-  constructor(){
+  constructor () {
     super()
-    this.state={
-      visible:false
+    this.state = {
+      inputTitle: [],
+      inputRules: [],
+      inputRequire: [],
+      visible: false,
+      list:[]
     }
   }
 
   remove = (k) => {
-    const { form } = this.props;
+    const { form } = this.props
     // can use data-binding to get
-    const keys = form.getFieldValue('keys');
+    const keys = form.getFieldValue('keys')
     // We need at least one passenger
-
 
     // can use data-binding to set
     for (let i = 0; i < keys.length; i++) {
@@ -32,57 +34,135 @@ class DynamicFieldSet extends React.Component {
     obj['keys'] = keys
     // console.log('obj: ', obj)
     form.setFieldsValue(obj)
+    this.handleChange()
   }
 
   add = () => {
     this.setState({
-      visible:true
+      visible: true
     })
   }
 
-  handleSubmit = (e) => {
-    e.preventDefault();
+  handleChange= () => {
     this.props.form.validateFields((err, values) => {
       if (!err) {
-
-        const keys=this.props.form.getFieldValue('keys')
-        let name=[],rules=[],require=[]
-        for (let i=0;i<keys.length;i++) {
-
-          if (keys[i] !== -1){
+        const keys = this.props.form.getFieldValue('keys')
+        let name = [], rules = [], require = []
+        let inputTitle = this.state.inputTitle, inputRules = this.state.inputRules, inputRequire = this.state.inputRequire
+        for (let i = 0; i < keys.length; i++) {
+          if (keys[i] !== -1) {
             name.push(inputTitle[i])
             rules.push(inputRules[i])
             require.push(inputRequire[i])
           }
         }
 
-        let obj={}
-        obj.require=require
-        obj.type='input'
-        obj.name=name
-        obj.rules=rules
-        // obj.name=inputTitle
-        // obj.rules=inputRules
-        console.log('inputObj',obj)
-        this.props.handleAddInput(obj)
+        let obj = {}
+        obj.require = require
+        obj.type = this.props.type
+        obj.name = name
+        obj.rules = rules
 
-        console.log('Received values of form: ', values);
+        const formItemLayout = {
+          labelCol: {
+            xs: { span: 24 },
+            sm: { span: 4 },
+          },
+          wrapperCol: {
+            xs: { span: 24 },
+            sm: { span: 20 },
+          },
+        };
+        const formItems = keys.map((k, index) => {
+          let inputType = 'input' + k
+          let title = this.state.inputTitle[index]
+          let bool = this.state.inputRequire[index]
+          let type = this.props.type
+          if (k !== -1) {
+            if (type === 'input') {
+              return (
+                <FormItem
+                  label={title}
+                  required={bool}
+                  key={k}
+                  {...formItemLayout}
+                >
+                  {this.props.form.getFieldDecorator(inputType, {
+                    validateTrigger: ['onChange', 'onBlur'],
+                    rules: [{
+                      message: "Please input passenger's name or delete this field."
+                    }]
+                  })(
+                    <Input placeholder='passenger name' style={{ width: '60%', marginRight: 8 }} />
+                  )}
+
+                  <Icon
+                    className='dynamic-delete-button'
+                    type='minus-circle-o'
+                    onClick={() => this.remove(k)}
+                  />
+
+                </FormItem>
+              )
+            } else if (type === 'textArea') {
+              return (
+                <FormItem
+                  label={title}
+                  required={bool}
+                  key={k}
+                  {...formItemLayout}
+                >
+                  {this.props.form.getFieldDecorator(inputType, {
+                    validateTrigger: ['onChange', 'onBlur'],
+                    rules: [{
+                      message: "Please input passenger's name or delete this field."
+                    }]
+                  })(
+                    <TextArea rows={4} style={{width: '60%'}} />
+                  )}
+
+                  <Icon
+                    className='dynamic-delete-button'
+                    type='minus-circle-o'
+                    onClick={() => this.remove(k)}
+                  />
+
+                </FormItem>
+              )
+            }
+          }
+        })
+        if (this.props.type === 'input') {
+          this.props.handleAddInput(obj,formItems)
+          console.log('inputTitle: ', inputTitle)
+        } else if (this.props.type === 'textArea') {
+          console.log('textAreaTitle: ', inputTitle)
+          this.props.handleAddTextArea(obj,formItems)
+        }
       }
-    });
+    })
   }
 
-  handleSubmitInput=(values,title,rule,require)=>{
 
-    const {form}=this.props
 
-    console.log('value:',values,'title: ',title,'rule: ',rule,'require: ',require)
+  handleSubmitInput=(values, title, rule, require) => {
+    const {form} = this.props
+
+    console.log('value:', values, 'title: ', title, 'rule: ', rule, 'require: ', require)
     this.setState({
       visible: false
     })
+    let inputTitle = this.state.inputTitle, inputRules = this.state.inputRules, inputRequire = this.state.inputRequire
 
     inputTitle.push(title)
     inputRules.push(rule)
     inputRequire.push(require)
+
+    this.setState({
+      inputTitle: inputTitle,
+      inputRules: inputRules,
+      inputRequire: inputRequire
+    })
 
     const keys = form.getFieldValue('keys')
     const nextKeys = keys.concat(ID)
@@ -90,91 +170,38 @@ class DynamicFieldSet extends React.Component {
     // can use data-binding to set
     // important! notify form to detect changes
     form.setFieldsValue({
-      keys: nextKeys,
+      keys: nextKeys
     })
-
+    this.handleChange()
   }
 
-
-  render() {
-    const { getFieldDecorator, getFieldValue } = this.props.form;
-    // const formItemLayout = {
-    //   labelCol: {
-    //     xs: { span: 24 },
-    //     sm: { span: 4 },
-    //   },
-    //   wrapperCol: {
-    //     xs: { span: 24 },
-    //     sm: { span: 20 },
-    //   },
-    // };
+  render () {
+    const { getFieldDecorator } = this.props.form
     const formItemLayoutWithOutLabel = {
       wrapperCol: {
         xs: { span: 24, offset: 0 },
-        sm: { span: 20, offset: 4 },
-      },
-    };
-    getFieldDecorator('keys', { initialValue: [] });
-    const keys = getFieldValue('keys');
-    const formItems = keys.map((k, index) => {
-
-      let inputType='input'+k
-      let title=inputTitle[index]
-      let bool=inputRequire[index] === 1 ? true : false
-      if(k !== -1){
-        return (
-          <FormItem
-            label={title}
-            required={bool}
-            key={k}
-          >
-            {getFieldDecorator(inputType, {
-              validateTrigger: ['onChange', 'onBlur'],
-              rules: [{
-                message: "Please input passenger's name or delete this field.",
-              }],
-            })(
-              <Input placeholder="passenger name" style={{ width: '60%', marginRight: 8 }} /> ,
-            )}
-
-            <Icon
-              className="dynamic-delete-button"
-              type="minus-circle-o"
-              onClick={() => this.remove(k)}
-            />
-
-          </FormItem>
-        );
+        sm: { span: 20, offset: 4 }
       }
+    }
+    getFieldDecorator('keys', { initialValue: [] })
 
-    });
     return (
       <div>
-        <Form onSubmit={this.handleSubmit}>
-          {formItems}
+
+        <Form>
           <FormItem {...formItemLayoutWithOutLabel}>
-            <Button type="dashed" onClick={this.add} style={{ width: '60%' }}>
-              <Icon type="plus" /> 添加input
+            <Button type='primary' onClick={this.add} style={{ width: '20%' }} className='addButton'>
+              <Icon type='plus' /> 添加{this.props.type === 'input' ? '输入框': '文本框'}
             </Button>
-          </FormItem>
-          <FormItem {...formItemLayoutWithOutLabel}>
-            <Button type="primary" htmlType="submit">确认</Button>
           </FormItem>
         </Form>
 
         <div>
-          <Modal title="Title"
-                 visible={this.state.visible}
-                 onCancel={() => {this.setState({visible: false})}}
-            // confirmLoading={confirmLoading}
-          >
-            <InputModel handleSubmitInput={this.handleSubmitInput} formType={'input'}/>
-
-          </Modal>
+          <InputModel handleSubmitInput={this.handleSubmitInput} hideModel={() => { this.setState({visible: false}) }} formType={'input'} visible={this.state.visible} />
         </div>
       </div>
 
-    );
+    )
   }
 }
 
