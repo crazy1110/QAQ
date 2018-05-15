@@ -94,7 +94,7 @@ class DynamicFieldSet extends React.Component {
       <Form onSubmit={this.handleSubmit}>
         {formItems}
         <FormItem {...formItemLayoutWithOutLabel}>
-          <Button type="dashed" onClick={this.add} style={{ width: '60%' }}>
+          <Button type="primary" onClick={this.add} style={{ width: '20%' }} className='addButton'>
             <Icon type="plus" /> 添加专业选择
           </Button>
         </FormItem>

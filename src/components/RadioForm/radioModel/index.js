@@ -1,5 +1,9 @@
 import {Form, Icon, Input, Button, Select, Modal} from 'antd'
+import { Form, Icon, Input, Button, Select } from 'antd'
 import './index.css'
+
+const FormItem = Form.Item
+const Option = Select.Option
 const FormItem = Form.Item
 const Option = Select.Option
 let ID = 0
@@ -31,9 +35,14 @@ class RadioModel extends React.Component {
         } else if (this.props.formType === 'input') {
           console.log(Rule)
           this.props.handleSubmitInput(Values, Title, Rule, Require)
+
+        } else if (this.props.formType === 'text') {
+          console.log(Rule)
+          this.props.handleSubmitText(Values, Title, Rule, Require)
         }
 
         console.log('[value]===', Values, '[title]===', Title)
+
       }
     })
   }
@@ -43,7 +52,6 @@ class RadioModel extends React.Component {
   }
 
   addRadio = () => {
-    const {form} = this.props
 
     const keys = form.getFieldValue('keys')
     const nextKeys = keys.concat(ID)
@@ -54,19 +62,20 @@ class RadioModel extends React.Component {
     })
   }
 
-  remove=(k) => {
-    const { form } = this.props
+  remove = (k) => {
+    const {form} = this.props
     const keys = form.getFieldValue('keys')
     let options = {keys: keys.filter(key => key !== k)}
 
     form.setFieldsValue(options)
+
   }
 
   render () {
     const {getFieldDecorator, getFieldValue} = this.props.form
     const formItemLayout = {
-      labelCol: { span: 6 },
-      wrapperCol: { span: 14 }
+      labelCol: {span: 6},
+      wrapperCol: {span: 14},
     }
 
     getFieldDecorator('keys', {initialValue: []})
